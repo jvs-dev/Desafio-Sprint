@@ -5,10 +5,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calculadora de Gastos com Combustível</title>
-    <!-- Link para os ícones do Material Design -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
     <style>
-        /* Estilos globais para o corpo da página */
         :root {
             --black: #1e1e1e;
             --white: #fff;
@@ -17,44 +21,50 @@
             --gray: #A8BEC9;
             --yellow: #F2B237;
             --green: #31C4BE;
+            --background-footer: #1F3540;
+            --icon-background: #5a5a5a;
+            --fuel-card-black: #3a3a3a;
         }
+
+        .light {
+            --black: #fff;
+            --white: #1e1e1e;
+            --background-green: #fff;
+            --cards-green: #e5f6ff;
+            --gray: #223037;
+            --yellow: #F2B237;
+            --green: #00b1ab;
+            --background-footer: #e5f6ff;
+            --icon-background: #ffffff;
+            --fuel-card-black: #FFF;
+        }
+
         body {
-            font-family: Arial, sans-serif;
+            font-family: "Poppins", sans-serif;
             background-color: var(--background-green);
-            /* Cor de fundo escura */
-            color: #e0e0e0;
-            /* Cor do texto principal */
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            /* Altura mínima para ocupar a tela inteira */
             margin: 0;
-            padding: 20px 20px 120px 20px;
+            padding: 20px 20px 200px 20px;
             box-sizing: border-box;
             position: relative;
-            /* Para posicionar os ícones do cabeçalho */
+            transition: 0.3s;
         }
 
-        /* Contêiner principal da aplicação */
         .container {
             background-color: var(--cards-green);
-            /* Cor de fundo do contêiner */
             border-radius: 15px;
-            /* Cantos arredondados */
             padding: 30px;
             width: 100%;
-            max-width: 500px;
-            /* Largura máxima para melhor visualização em telas maiores */
+            max-width: 720px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-            /* Sombra para profundidade */
             display: flex;
             flex-direction: column;
             gap: 20px;
-            /* Espaçamento entre os elementos */
         }
 
-        /* Ícones de configuração e tema no canto superior direito */
         .header-icons {
             position: absolute;
             top: 20px;
@@ -64,26 +74,40 @@
             gap: 10px;
         }
 
-        /* Botões de ícone */
         .icon-button {
-            background-color: #4a4a4a;
+            background-color: var(--green);
             border: none;
-            border-radius: 50%;
-            /* Torna o botão circular */
-            width: 40px;
-            height: 40px;
+            border-radius: 12px;
+            width: 50px;
+            height: 50px;
             display: flex;
             justify-content: center;
             align-items: center;
             cursor: pointer;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            box-shadow: inset 0px -4px 4px rgba(0, 0, 0, 0.42);
             transition: background-color 0.3s ease;
-            /* Transição suave ao passar o mouse */
+        }
+
+        .icon-button i {
+            color: #fff;
+            font-size: 24px;
+        }
+
+        #toggleTheme {
+            background: var(--white);
         }
 
         .icon-button:hover {
             background-color: #5a5a5a;
-            /* Cor de fundo ao passar o mouse */
+        }
+
+        #toggleTheme:hover {
+            background-color: var(--icon-background);
+        }
+
+        #toggleTheme:hover .material-icons {
+            color: var(--white);
         }
 
         .icon-button .material-icons {
@@ -91,56 +115,57 @@
             font-size: 24px;
         }
 
-        /* Cartões que agrupam seções do formulário */
+        #toggleTheme .material-icons {
+            color: var(--black);
+        }
+
         .card {
             background-color: var(--cards-green);
-            /* Mesma cor do contêiner para um visual contínuo */
             border-radius: 10px;
-            padding: 20px;            
+            padding: 0px;
             display: flex;
             flex-direction: column;
-            gap: 15px;
         }
 
-        /* Título principal */
         .title {
             text-align: center;
-            font-size: 1.8em;
-            color: #66ccff;
-            /* Azul claro para o título */
-            margin-bottom: 10px;
+            font-size: 2.4em;
+            color: var(--green);
+            margin: 0px;
+            line-height: 100%;
         }
 
-        /* Subtítulo */
         .subtitle {
             text-align: center;
             font-size: 1em;
-            color: #b0b0b0;
-            margin-bottom: 20px;
+            color: var(--gray);
+            margin: 0px;
+            padding: 0px 0px 20px 0px;
+            border-bottom: solid 5px var(--gray);
         }
 
         .subtitle span {
-            color: #66ccff;
+            color: var(--green);
             font-weight: bold;
         }
 
-        /* Grupo de entrada (rótulo + campo de entrada) */
         .input-group {
             display: flex;
             flex-direction: column;
             gap: 8px;
+            margin: 14px 0px 10px 0px;
         }
 
         .input-group label {
-            font-size: 0.9em;
-            color: #b0b0b0;
+            font-size: 1em;
+            color: var(--white);
+            font-weight: 600;
         }
 
-        /* Campo de entrada estilizado */
         .input-field {
             display: flex;
             align-items: center;
-            background-color: #3a3a3a;
+            background-color: #fff;
             border-radius: 8px;
             padding: 10px 15px;
         }
@@ -148,15 +173,15 @@
         .input-field input {
             background: none;
             border: none;
-            color: #e0e0e0;
+            color: #1e1e1e;
             width: 100%;
-            font-size: 1.1em;
+            font-size: 1.2em;
+            font-weight: 500;
             outline: none;
-            /* Remove o contorno ao focar */
         }
 
         .input-field input::placeholder {
-            color: #888;
+            color: rgba(30, 30, 30, 0.68);
         }
 
         .input-field span {
@@ -165,21 +190,20 @@
             font-size: 0.9em;
         }
 
-        /* Exibição do resultado (e.g., consumo necessário) */
         .result-display {
-            background-color: #3a3a3a;
             border-radius: 8px;
-            padding: 10px 15px;
             text-align: center;
             font-size: 1.1em;
-            color: #e0e0e0;
-            margin-top: 10px;
+            color: var(--white);
+            margin-top: 0px;
         }
 
-        /* Botão de ação */
+        #required-fuel {
+            font-weight: 700;
+        }
+
         .button {
-            background-color: #00bcd4;
-            /* Cor azul-petróleo */
+            background-color: var(--green);
             color: white;
             padding: 12px 20px;
             border: none;
@@ -189,26 +213,21 @@
             transition: background-color 0.3s ease;
             width: 100%;
             box-sizing: border-box;
-            /* Inclui padding e borda na largura total */
         }
 
         .button:hover {
             background-color: #0097a7;
-            /* Azul-petróleo mais escuro ao passar o mouse */
         }
 
-        /* Grade para os cartões dos postos de combustível */
         .fuel-stations-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-            /* Colunas responsivas */
             gap: 10px;
             margin-top: 20px;
         }
 
-        /* Cartão individual do posto de combustível */
         .fuel-station-card {
-            background-color: #3a3a3a;
+            background-color: var(--fuel-card-black);
             border-radius: 10px;
             padding: 15px;
             display: flex;
@@ -216,32 +235,31 @@
             align-items: center;
             gap: 5px;
             font-size: 0.9em;
-            color: #e0e0e0;
+            color: var(--white);
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         }
 
         .fuel-station-card .material-icons {
-            color: #66ccff;
+            color: var(--green);
             font-size: 20px;
         }
 
         .fuel-station-card .price {
             font-weight: bold;
-            color: #66ccff;
+            color: var(--green);
         }
 
-        /* Seção de resumo na parte inferior */
         .summary-section {
+            box-sizing: border-box;
             position: fixed;
-            left: 0;
-            bottom: 0;
-            width: 100%;
-            background-color: #2b2b2b;            
-            border-radius: 10px;
-            padding: 20px;            
+
+            bottom: 20px;
+            width: calc(100vw - 40px);
+            background-color: var(--background-footer);
+            border-radius: 23px;
+            padding: 20px;
             display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
+            flex-direction: column;
         }
 
         .summary-text {
@@ -250,47 +268,65 @@
             gap: 5px;
         }
 
+        .summary-text-2 {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: flex-end;
+            border-bottom: dashed 2px var(--gray);
+        }
+
         .summary-label {
-            font-size: 0.9em;
-            color: #b0b0b0;
+            font-size: 1em;
+            font-weight: 500;
+            color: var(--white);
         }
 
         .summary-value {
             font-size: 1.2em;
             font-weight: bold;
-            color: #e0e0e0;
+            color: var(--green);
         }
 
-        /* Custo diário em destaque */
         .daily-cost {
             font-size: 2.2em;
             font-weight: bold;
             color: #00bcd4;
-            /* Cor azul-petróleo */
             text-align: right;
+            line-height: 115%;
+        }
+
+        .message-box {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #3a3a3a;
+            color: #e0e0e0;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            text-align: center;
         }
     </style>
 </head>
 
 <body>
-    <!-- Ícones do cabeçalho (configurações e tema) -->
     <div class="header-icons">
-        <button class="icon-button">
-            <span class="material-icons">settings</span>
+        <button class="icon-button" id="removeSave">
+            <i class="bi bi-trash"></i>
         </button>
-        <button class="icon-button">
+        <button class="icon-button" id="toggleTheme">
             <span class="material-icons">wb_sunny</span>
         </button>
     </div>
 
-    <!-- Contêiner principal da aplicação -->
     <div class="container">
-        <!-- Cartão para cálculo de consumo -->
         <div class="card">
             <h1 class="title">CALCULE SEUS GASTOS</h1>
             <p class="subtitle">CALCULE FACILMENTE SEUS GASTOS COM <span>COMBUSTÍVEL</span></p>
 
-            <!-- Campo de entrada para distância -->
             <div class="input-group">
                 <label for="distance">DISTÂNCIA DA SUA CASA ATÉ SEU TRABALHO</label>
                 <div class="input-field">
@@ -299,7 +335,6 @@
                 </div>
             </div>
 
-            <!-- Campo de entrada para consumo médio -->
             <div class="input-group">
                 <label for="consumption">QUAL O CONSUMO MÉDIO DO VEÍCULO</label>
                 <div class="input-field">
@@ -308,13 +343,11 @@
                 </div>
             </div>
 
-            <!-- Exibição do consumo de combustível necessário -->
             <div class="result-display">
-                CONSUMO NECESSÁRIO: <span id="required-fuel">0L</span>
+                CONSUMO NECESSÁRIO(IDA E VOLTA): <span id="required-fuel">0L</span>
             </div>
         </div>
 
-        <!-- Cartão para registro de preço do combustível -->
         <div class="card">
             <div class="input-group">
                 <label for="fuel-price">VALOR DO COMBUSTÍVEL PESQUISADO</label>
@@ -326,180 +359,192 @@
             <button class="button" id="register-button">REGISTRAR</button>
         </div>
 
-        <!-- Grade para exibir os postos de combustível e seus preços -->
-        <div class="fuel-stations-grid">
-            <!-- Exemplo de um cartão de posto de combustível (serão gerados via JS) -->
+        <div class="fuel-stations-grid" id="fuelStations">
             <div class="fuel-station-card">
                 <span class="material-icons">location_on</span>
                 <span>POSTO 1</span>
                 <span class="price">R$ 10</span>
             </div>
-            <div class="fuel-station-card">
-                <span class="material-icons">location_on</span>
-                <span>POSTO 2</span>
-                <span class="price">R$ 10</span>
-            </div>
-            <div class="fuel-station-card">
-                <span class="material-icons">location_on</span>
-                <span>POSTO 3</span>
-                <span class="price">R$ 10</span>
-            </div>
-            <div class="fuel-station-card">
-                <span class="material-icons">location_on</span>
-                <span>POSTO 4</span>
-                <span class="price">R$ 10</span>
-            </div>
-            <div class="fuel-station-card">
-                <span class="material-icons">location_on</span>
-                <span>POSTO 5</span>
-                <span class="price">R$ 10</span>
-            </div>
-            <div class="fuel-station-card">
-                <span class="material-icons">location_on</span>
-                <span>POSTO 6</span>
-                <span class="price">R$ 10</span>
-            </div>
         </div>
     </div>
-    <!-- Seção de resumo (menor valor e gasto diário) -->
     <div class="summary-section">
         <div class="summary-text">
-            <span class="summary-label">Menor valor pesquisado:</span>
-            <span class="summary-value" id="lowest-price">R$ 20</span>
-            <span class="summary-label">Gasto diário (ida e volta):</span>
+            <div>
+                <span class="summary-label">Menor valor pesquisado:</span>
+                <span class="summary-value" id="lowest-price">R$ 0.00</span>
+            </div>
+            <div>
+                <span class="summary-label">Média dos valores pesquisados:</span>
+                <span class="summary-value" id="medium-price">R$ 0.00</span>
+            </div>
         </div>
-        <div class="daily-cost" id="daily-cost">R$ 25.90</div>
+        <div class="summary-text-2">
+            <span class="summary-label">Gasto diário (ida e volta):</span>
+            <div class="daily-cost" id="daily-cost">R$ 0.00</div>
+        </div>
     </div>
 
     <script>
-        // Obtenção de referências para os elementos HTML
         const distanceInput = document.getElementById('distance');
         const consumptionInput = document.getElementById('consumption');
         const requiredFuelSpan = document.getElementById('required-fuel');
         const fuelPriceInput = document.getElementById('fuel-price');
         const registerButton = document.getElementById('register-button');
         const lowestPriceSpan = document.getElementById('lowest-price');
+        const mediumPrice = document.getElementById("medium-price")
         const dailyCostSpan = document.getElementById('daily-cost');
+        const toggleTheme = document.getElementById("toggleTheme")
+        const removeSave = document.getElementById("removeSave")
+        const body = document.querySelector("body")
+        let registeredPrices = [];
+        let currentFuelConsumption = 0;
 
-        // Array para armazenar os preços registrados dos postos.
-        // Inicializado com os valores da imagem para simular os postos existentes.
-        let registeredPrices = [10, 10, 10, 10, 10, 10]; 
-        let currentFuelConsumption = 0; // Variável para armazenar o consumo de combustível calculado
+        distanceInput.value = localStorage.getItem("distance") != null ? localStorage.getItem("distance") : null
+        consumptionInput.value = localStorage.getItem("consume") != null ? localStorage.getItem("consume") : null
+        registeredPrices = localStorage.getItem("prices") != null ? localStorage.getItem("prices").split(',') : []
 
-        /**
-         * Calcula o consumo de combustível necessário com base na distância e no consumo médio.
-         * Atualiza o campo de exibição do consumo necessário.
-         */
+        toggleTheme.addEventListener("click", () => {
+            if (body.classList.contains("light")) {
+                body.classList.remove("light")
+                localStorage.setItem("theme", "dark")
+            } else {
+                body.classList.add("light")
+                localStorage.setItem("theme", "light")
+            }
+        })
+
+        removeSave.addEventListener("click", () => {
+            localStorage.removeItem("dailyCost")
+            localStorage.removeItem("distance")
+            localStorage.removeItem("lowest")
+            localStorage.removeItem("medium")
+            localStorage.removeItem("consume")
+            localStorage.removeItem("prices")
+            localStorage.removeItem("required")
+            window.location.reload()
+        })
+
+
+        function createMessage(text) {
+            let messageBox = document.createElement('div');
+            messageBox.classList.add("message-box")
+            messageBox.innerHTML = `
+                    <p>${text}</p>
+                    <button style="background-color: #00bcd4; color: white; padding: 8px 15px; border: none; border-radius: 5px; cursor: pointer; margin-top: 10px;">OK</button>
+                `;
+            document.body.appendChild(messageBox);
+
+            messageBox.querySelector('button').addEventListener('click', () => {
+                document.body.removeChild(messageBox);
+            });
+        }
+
         function calculateRequiredFuel() {
             const distance = parseFloat(distanceInput.value);
-            const consumption = parseFloat(consumptionInput.value);
+            const consume = parseFloat(consumptionInput.value);
 
-            if (distance > 0 && consumption > 0) {
-                // Calcula o consumo para ida e volta (distância * 2)
-                currentFuelConsumption = (distance * 2) / consumption; 
-                requiredFuelSpan.textContent = currentFuelConsumption.toFixed(2) + 'L';
+            if (distance > 0 && consume > 0) {
+                currentFuelConsumption = (distance * 2) / consume;
+                requiredFuelSpan.textContent = `${currentFuelConsumption.toFixed(2)}L`;
+                localStorage.setItem("required", currentFuelConsumption.toFixed(2))
+                localStorage.setItem("distance", distance.toFixed(2))
+                localStorage.setItem("consume", consume.toFixed(2))
             } else {
                 currentFuelConsumption = 0;
                 requiredFuelSpan.textContent = '0L';
+                localStorage.setItem("required", 0)
+                localStorage.setItem("distance", 0)
+                localStorage.setItem("consume", 0)
             }
-            updateDailyCost(); // Atualiza o custo diário sempre que o consumo muda
+            updateDailyCost();
         }
 
-        /**
-         * Atualiza a exibição dos cartões dos postos de combustível na grade.
-         * Limpa os cartões existentes e recria-os com base nos `registeredPrices`.
-         */
         function updateFuelStationsDisplay() {
-            const fuelStationGrid = document.querySelector('.fuel-stations-grid');
-            fuelStationGrid.innerHTML = ''; // Limpa os cartões atuais
+            const fuelStationGrid = document.getElementById('fuelStations');
+            fuelStationGrid.innerHTML = '';
             registeredPrices.forEach((price, index) => {
                 const stationCard = document.createElement('div');
                 stationCard.className = 'fuel-station-card';
                 stationCard.innerHTML = `
                     <span class="material-icons">location_on</span>
                     <span>POSTO ${index + 1}</span>
-                    <span class="price">R$ ${price.toFixed(2)}</span>
+                    <span class="price">R$ ${Number(price).toFixed(2)}</span>
                 `;
                 fuelStationGrid.appendChild(stationCard);
             });
         }
 
-        /**
-         * Encontra o menor preço entre os preços registrados e atualiza a exibição.
-         */
+
         function updateLowestPrice() {
             if (registeredPrices.length > 0) {
                 const lowest = Math.min(...registeredPrices);
                 lowestPriceSpan.textContent = `R$ ${lowest.toFixed(2)}`;
+                localStorage.setItem("lowest", lowest.toFixed(2))
             } else {
                 lowestPriceSpan.textContent = 'R$ 0.00';
+                localStorage.setItem("lowest", 0)
             }
-            updateDailyCost(); // Atualiza o custo diário sempre que o menor preço muda
+            updateDailyCost();
         }
 
-        /**
-         * Calcula e atualiza o custo diário com base no menor preço de combustível
-         * e no consumo de combustível necessário.
-         */
+        function updateMediumPrice() {
+            if (registeredPrices.length > 0) {
+                let medium = 0
+                registeredPrices.forEach(cost => {
+                    medium = medium + Number(cost)
+                });
+                medium = medium / registeredPrices.length
+                mediumPrice.textContent = `R$ ${medium.toFixed(2)}`;
+                localStorage.setItem("medium", medium.toFixed(2))
+            } else {
+                mediumPrice.textContent = 'R$ 0.00';
+                localStorage.setItem("medium", 0)
+            }
+        }
+
         function updateDailyCost() {
             const lowest = registeredPrices.length > 0 ? Math.min(...registeredPrices) : 0;
             const dailyCost = lowest * currentFuelConsumption;
             dailyCostSpan.textContent = `R$ ${dailyCost.toFixed(2)}`;
+            localStorage.setItem("dailyCost", dailyCost.toFixed(2))
         }
 
-        // Adiciona listeners de evento para os campos de entrada de distância e consumo
+
         distanceInput.addEventListener('input', calculateRequiredFuel);
         consumptionInput.addEventListener('input', calculateRequiredFuel);
 
-        // Adiciona listener de evento para o botão de registro de preço
+
         registerButton.addEventListener('click', () => {
             const price = parseFloat(fuelPriceInput.value);
             if (!isNaN(price) && price > 0) {
-                // Adiciona o novo preço à lista.
-                // Se a lista já tiver 6 elementos (como na imagem), remove o mais antigo (primeiro)
-                // e adiciona o novo no final, simulando uma rotação.
-                if (registeredPrices.length < 6) {
-                    registeredPrices.push(price);
-                } else {
-                    registeredPrices.shift(); // Remove o primeiro elemento
-                    registeredPrices.push(price); // Adiciona o novo no final
-                }
-                
-                fuelPriceInput.value = ''; // Limpa o campo de entrada após o registro
-                updateFuelStationsDisplay(); // Atualiza a exibição dos postos
-                updateLowestPrice(); // Atualiza o menor preço e o custo diário
-            } else {
-                // Usa uma div personalizada para mensagens em vez de alert()
-                const messageBox = document.createElement('div');
-                messageBox.style.cssText = `
-                    position: fixed;
-                    top: 50%;
-                    left: 50%;
-                    transform: translate(-50%, -50%);
-                    background-color: #3a3a3a;
-                    color: #e0e0e0;
-                    padding: 20px;
-                    border-radius: 10px;
-                    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-                    z-index: 1000;
-                    text-align: center;
-                `;
-                messageBox.innerHTML = `
-                    <p>Por favor, insira um valor válido para o combustível.</p>
-                    <button style="background-color: #00bcd4; color: white; padding: 8px 15px; border: none; border-radius: 5px; cursor: pointer; margin-top: 10px;">OK</button>
-                `;
-                document.body.appendChild(messageBox);
 
-                messageBox.querySelector('button').addEventListener('click', () => {
-                    document.body.removeChild(messageBox);
-                });
+                if (registeredPrices.length < 10) {
+                    registeredPrices.push(price);
+                    localStorage.setItem("prices", registeredPrices)
+                } else {
+                    createMessage("Número máximo de postos atingido.")
+                }
+
+                fuelPriceInput.value = '';
+                updateFuelStationsDisplay();
+                updateLowestPrice();
+                updateMediumPrice()
+            } else {
+                createMessage("Por favor, insira um valor válido para o combustível.")
             }
         });
 
-        // Chamadas iniciais para configurar a exibição quando a página carrega
-        updateFuelStationsDisplay(); // Exibe os postos iniciais
-        updateLowestPrice(); // Calcula e exibe o menor preço inicial
-        calculateRequiredFuel(); // Realiza o cálculo inicial do consumo (se houver valores padrão)
+
+        if (localStorage.getItem("theme") == "light") {
+            body.classList.add("light")
+        }
+
+
+
+        updateFuelStationsDisplay();
+        updateLowestPrice();
+        updateMediumPrice()
+        calculateRequiredFuel(); 
     </script>
 </body>
 
