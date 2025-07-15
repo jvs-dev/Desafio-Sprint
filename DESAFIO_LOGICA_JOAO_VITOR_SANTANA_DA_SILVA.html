@@ -49,7 +49,7 @@
 
       body {
         font-family: "Poppins", sans-serif;
-        background-color: var(--background-green);
+        background-color: var(--cards-green);
         display: flex;
         justify-content: center;
         align-items: center;
@@ -62,15 +62,14 @@
       }
 
       .container {
-        background-color: var(--cards-green);
         border-radius: 15px;
         padding: 30px;
         width: 100%;
         max-width: 720px;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
         display: flex;
         flex-direction: column;
         gap: 20px;
+        transition: 0.3s;
       }
 
       .header-icons {
@@ -133,6 +132,7 @@
         padding: 0px;
         display: flex;
         flex-direction: column;
+        transition: 0.3s;
       }
 
       .title {
@@ -149,7 +149,7 @@
         color: var(--gray);
         margin: 0px;
         padding: 0px 0px 20px 0px;
-        border-bottom: solid 5px var(--gray);
+        border-bottom: solid 3px var(--gray);
       }
 
       .subtitle span {
@@ -496,7 +496,11 @@
         <a class="jvsRef" href="https://github.com/jvs-dev"
           ><ion-icon name="code-slash-outline"></ion-icon>jvs-dev</a
         >
-        <img class="cimatecFordLogo" src="https://cimatecead.senaicimatec.com.br/Arquivos/Embed/Canvas/avulsos/fordITLP/img/frame-10846-1@2x.png" alt="Logo CIMATEC & Ford" />
+        <img
+          class="cimatecFordLogo"
+          src="https://cimatecead.senaicimatec.com.br/Arquivos/Embed/Canvas/avulsos/fordITLP/img/frame-10846-1@2x.png"
+          alt="Logo CIMATEC & Ford"
+        />
       </div>
     </div>
     <div class="header-icons">
