@@ -82,7 +82,8 @@
       }
 
       .icon-button {
-        background-color: var(--yellow);
+        position: relative;
+        background: var(--white);
         border: none;
         border-radius: 12px;
         width: 50px;
@@ -97,33 +98,62 @@
       }
 
       .icon-button i {
-        color: #fff;
+        color: var(--black);
         font-size: 24px;
-      }
-
-      #toggleTheme {
-        background: var(--white);
-      }
-
-      .icon-button:hover {
-        background-color: #5a5a5a;
-      }
-
-      #toggleTheme:hover {
-        background-color: var(--icon-background);
-      }
-
-      #toggleTheme:hover .material-icons {
-        color: var(--white);
       }
 
       .icon-button .material-icons {
-        color: #ffffff;
+        color: var(--black);
         font-size: 24px;
       }
 
-      #toggleTheme .material-icons {
+      .icon-button:hover {
+        background-color: var(--icon-background);
+      }
+
+      .icon-button:hover i,
+      .icon-button:hover .material-icons {
+        color: var(--white);
+      }
+
+      #removeSave {
+        background: #f00;
+      }
+      #removeSave i {
+        color: #fff;
+      }
+
+      #removeSave:hover {
+        background: #ff0000b3;
+      }
+
+      .icon-button::after {
+        position: absolute;
+        top: 50%;
+        left: -100%;
+        transform: translate(-60%, -50%);
+        font-size: 1em;
         color: var(--black);
+        background-color: var(--white);
+        padding: 5px 10px;        
+        border-radius: 8px;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        visibility: hidden;
+      }
+      .icon-button:hover::after {
+        visibility: visible;
+        opacity: 1;
+      }
+
+      #toggleTheme::after {
+        content: "Mudar tema";
+      }
+      #readText::after {
+        content: "Doc. solução";
+      }
+      #removeSave::after {
+        content: "Delete data";
       }
 
       .card {
@@ -485,6 +515,140 @@
         padding: 12px;
         border-radius: 10px;
       }
+      .docSection {
+        box-sizing: border-box;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        overflow: auto;
+        background-color: var(--loading-background);
+        backdrop-filter: blur(5px);
+        color: var(--white);
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+        z-index: 5;
+        padding: 40px;
+      }
+
+      .closeButton {
+        position: absolute;
+        top: 40px;
+        right: 40px;
+        background: var(--white);
+        color: var(--black);
+        border: none;
+        border-radius: 12px;
+        width: 50px;
+        height: 50px;
+        font-size: 30px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        box-shadow: inset 0px -4px 1px rgba(0, 0, 0, 0.42),
+          0px -3px 6px 0px rgb(0 0 0 / 19%);
+        transition: background-color 0.3s ease;
+      }
+      .docSection h2 {
+        font-size: 1.8em;
+        margin-bottom: 10px;
+      }
+      .docSection p {
+        font-size: 1.2em;
+        margin-bottom: 20px;
+      }
+      .docSection code {
+        background-color: #f0f0f0;
+        padding: 2px 4px;
+        border-radius: 4px;
+        color: #d63384;
+      }
+
+      .buttonSpeech {
+        background: var(--white);
+        color: var(--black);
+        border: none;
+        border-radius: 12px;
+        width: 50px;
+        height: 50px;
+        min-height: 50px;
+        font-size: 18px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        box-shadow: inset 0px -4px 1px rgba(0, 0, 0, 0.42),
+          0px -3px 6px 0px rgb(0 0 0 / 19%);
+        transition: background-color 0.3s ease;
+      }
+      .buttonSpeech i {
+        font-size: 1.2em;
+      }
+      .docSection button.closeButton:hover,
+      .buttonSpeech:hover {
+        background-color: var(--yellow);
+        color: var(--black);
+      }
+      @media (max-width: 768px) {
+        body {
+          padding: 80px 0px 150px 0px;
+        }
+        .container {
+          padding: 20px;
+        }
+        .header-icons {
+          flex-direction: row-reverse;
+          top: 20px;
+          right: 20px;
+        }
+        .icon-button {
+          width: 40px;
+          height: 40px;
+        }
+        .icon-button i,
+        .icon-button .material-icons {
+          font-size: 20px;
+        }
+        .closeButton {
+          top: 20px;
+          right: 20px;
+        }
+        .docSection {
+          padding-top: 60px;
+        }
+        .input-group label {
+          text-align: center;
+        }
+        .summary-section {
+          width: 100vw;
+          padding: 10px;
+          bottom: 0;
+          border-radius: 0px;
+        }
+        .daily-cost {
+          font-size: 1.5em;
+        }
+        .summary-text-2 {
+          margin-top: 14px;
+        }
+        .icon-button::after {
+          bottom: 0;
+          left: 50%;
+          transform: translate(-50%, 70%);
+          height: fit-content;
+        }
+        .loader-bottomDiv {
+          width: calc(100% - 40px);
+          bottom: 10px;
+          flex-direction: column;
+          align-items: center;
+          gap: 20px;
+        }
+      }
     </style>
   </head>
 
@@ -510,6 +674,9 @@
       <button class="icon-button" id="toggleTheme">
         <span class="material-icons">wb_sunny</span>
       </button>
+      <button class="icon-button" id="readText">
+        <i class="bi bi-journal-text"></i>
+      </button>
     </div>
 
     <div class="container">
@@ -522,7 +689,13 @@
         <div class="input-group">
           <label for="distance">DISTÂNCIA DA SUA CASA ATÉ SEU TRABALHO</label>
           <div class="input-field">
-            <input type="number" id="distance" placeholder="0" />
+            <input
+              type="number"
+              id="distance"
+              placeholder="0"
+              max="1000"
+              min="0"
+            />
             <span>(KM)</span>
           </div>
         </div>
@@ -530,7 +703,13 @@
         <div class="input-group">
           <label for="consumption">QUAL O CONSUMO MÉDIO DO VEÍCULO</label>
           <div class="input-field">
-            <input type="number" id="consumption" placeholder="0" />
+            <input
+              type="number"
+              id="consumption"
+              placeholder="0"
+              max="1000"
+              min="0"
+            />
             <span>(KM/L)</span>
           </div>
         </div>
@@ -544,7 +723,13 @@
         <div class="input-group">
           <label for="fuel-price">VALOR DO COMBUSTÍVEL PESQUISADO</label>
           <div class="input-field">
-            <input type="number" id="fuel-price" placeholder="0.00" />
+            <input
+              type="number"
+              id="fuel-price"
+              placeholder="0.00"
+              max="1000"
+              min="0"
+            />
             <span>(R$)</span>
           </div>
         </div>
@@ -596,7 +781,9 @@
       const toggleTheme = document.getElementById("toggleTheme");
       const removeSave = document.getElementById("removeSave");
       const loadingScreen = document.getElementById("loadingScreen");
+      const readText = document.getElementById("readText");
       const body = document.querySelector("body");
+      let isSpeechEnabled = false;
       let registeredPrices = [];
       let currentFuelConsumption = 0;
 
@@ -627,6 +814,52 @@
           body.classList.add("light");
           localStorage.setItem("theme", "light");
         }
+      });
+
+      readText.addEventListener("click", () => {
+        body.style.overflow = "hidden";
+        let div = document.createElement("div");
+        div.classList.add("docSection");
+        div.innerHTML = `     
+          <button type="button" class="closeButton"><ion-icon name="close-circle-outline"></ion-icon></button>     
+          <h2>Sobre a Solução</h2>
+          <p>
+            A solução para evitar o retorno de NaN (Not a Number) ao realizar cálculos com entradas de usuário é garantir que os valores inseridos sejam válidos e convertidos corretamente para números. Utilizando a função <code>parseFloat</code>, podemos converter strings em números de ponto flutuante, evitando erros de cálculo.
+          </p>
+          <h3>Exemplo de Uso do parseFloat</h3>
+          <p>
+            Ao utilizar <code>parseFloat("10.5")</code>, obtemos o número 10.5, enquanto <code>parseFloat("abc")</code> retorna NaN. Para evitar isso, sempre verifique se a entrada é um número válido antes de realizar cálculos.
+          </p>
+           <h3>Solução neste projeto</h3>
+          <p>
+            Como este projeto não foi feito usando o comando <code>prompt</code> para receber os valores do usuário, mas sim com inputs HTML, o código já garante que os valores inseridos sejam números válidos. Portanto, não há risco de retornar NaN durante os cálculos.<br> Entretanto, é sempre uma boa prática validar as entradas do usuário para garantir que os cálculos sejam precisos e evitar erros inesperados.
+          </p>
+          <h3>Precauções Extras</h3>
+          <p>
+            Para garantir que o numero de postos não chegue a um número exorbitante, o código limita o número de postos a 10. Se o usuário tentar adicionar mais de 10 postos, uma mensagem de alerta é exibida informando que o número máximo foi atingido.
+          </p>
+          <button type="button" class="buttonSpeech"><i class="bi bi-volume-up"></i></button>
+        `;
+        document.body.appendChild(div);
+        const closeButton = div.querySelector(".closeButton");
+        const buttonSpeech = div.querySelector(".buttonSpeech");
+        buttonSpeech.addEventListener("click", () => {
+          if (isSpeechEnabled == false) {
+            isSpeechEnabled = true;
+            buttonSpeech.innerHTML = '<i class="bi bi-volume-mute"></i>';
+            const utterance = new SpeechSynthesisUtterance(div.textContent);
+            utterance.lang = "pt-BR";
+            speechSynthesis.speak(utterance);
+          } else {
+            isSpeechEnabled = false;
+            buttonSpeech.innerHTML = '<i class="bi bi-volume-up"></i>';
+            speechSynthesis.cancel();
+          }
+        });
+        closeButton.addEventListener("click", () => {
+          document.body.removeChild(div);
+          body.style.overflow = "";
+        });
       });
 
       removeSave.addEventListener("click", () => {
