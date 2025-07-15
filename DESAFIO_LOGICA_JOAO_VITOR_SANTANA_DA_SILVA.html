@@ -218,7 +218,7 @@
     }
 
     .input-field input::placeholder {
-      color: rgba(30, 30, 30, 0.68);
+      color: rgba(0, 0, 0, 0.411);
     }
 
     .input-field span {
@@ -945,27 +945,29 @@
           updateLowestPrice();
           updateMediumPrice();
         });
-        const stationCard = document.createElement("div");
-        stationCard.className = "fuel-station-card";
-        stationCard.innerHTML = `          
-                    <span class="material-icons">location_on</span>
-                    <span>POSTO ${index + 1}</span>
-                    <input type="number" class="price" min="0" value="${Number(price).toFixed(2)}" />
-                `;
-        const inputPrice = stationCard.querySelector(".price");
-        stationCard.appendChild(button);
-        fuelStationGrid.appendChild(stationCard);
-        inputPrice.onchange = () => {
-          if (inputPrice.value > 0) {
-            registeredPrices[index] = inputPrice.value
-            localStorage.setItem("prices", registeredPrices);
-            updateFuelStationsDisplay();
-            updateLowestPrice();
-            updateMediumPrice();
-          } else {
-            inputPrice.value = 0
+        setTimeout(() => {
+          const stationCard = document.createElement("div");
+          stationCard.className = "fuel-station-card";
+          stationCard.innerHTML = `          
+            <span class="material-icons">location_on</span>
+            <span>POSTO ${index + 1}</span>
+            <input type="number" class="price" min="0" value="${Number(price).toFixed(2)}" />
+        `;
+          const inputPrice = stationCard.querySelector(".price");
+          stationCard.appendChild(button);
+          fuelStationGrid.appendChild(stationCard);
+          inputPrice.onchange = () => {
+            if (inputPrice.value > 0) {
+              registeredPrices[index] = inputPrice.value
+              localStorage.setItem("prices", registeredPrices);
+              updateFuelStationsDisplay();
+              updateLowestPrice();
+              updateMediumPrice();
+            } else {
+              inputPrice.value = 0
+            }
           }
-        }
+        }, 0.2 * registeredPrices.length);
       });
     }
 
