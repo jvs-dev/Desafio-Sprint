@@ -1,826 +1,831 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Calculadora de Gastos com Combustível</title>
-    <link
-      href="https://fonts.googleapis.com/icon?family=Material+Icons"
-      rel="stylesheet"
-    />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
-    />
-    <style>
-      :root {
-        --black: #1e1e1e;
-        --white: #fff;
-        --background-green: #10181c;
-        --cards-green: #223037;
-        --gray: #a8bec9;
-        --yellow: #f2b237;
-        --green: #31c4be;
-        --background-footer: #1f3540dc;
-        --icon-background: #5a5a5a;
-        --fuel-card-black: #3a3a3a;
-        --loading-background: rgba(30, 30, 30, 0.8);
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Calculadora de Gastos com Combustível</title>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" />
+  <style>
+    :root {
+      --black: #1e1e1e;
+      --white: #fff;
+      --background-green: #10181c;
+      --cards-green: #223037;
+      --gray: #a8bec9;
+      --yellow: #f2b237;
+      --green: #31c4be;
+      --background-footer: #1f3540dc;
+      --icon-background: #5a5a5a;
+      --fuel-card-black: #3a3a3a;
+      --loading-background: rgba(30, 30, 30, 0.9);
+    }
+
+    .light {
+      --black: #fff;
+      --white: #1e1e1e;
+      --background-green: #eee;
+      --cards-green: #e5f6ff;
+      --gray: #223037;
+      --yellow: #ffa800;
+      --green: #00b1ab;
+      --background-footer: #ffffffba;
+      --icon-background: #ffffff;
+      --fuel-card-black: #fff;
+      --loading-background: rgba(255, 255, 255, 0.9);
+    }
+
+    body {
+      font-family: "Poppins", sans-serif;
+      background-color: var(--cards-green);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px 20px 200px 20px;
+      box-sizing: border-box;
+      position: relative;
+      transition: 0.3s;
+    }
+
+    .container {
+      border-radius: 15px;
+      padding: 30px;
+      width: 100%;
+      max-width: 780px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      transition: 0.3s;
+    }
+
+    .header-icons {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .icon-button {
+      position: relative;
+      background: var(--white);
+      border: none;
+      border-radius: 12px;
+      width: 50px;
+      height: 50px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      box-shadow: inset 0px -4px 1px rgba(0, 0, 0, 0.42),
+        0px -3px 6px 0px rgb(0 0 0 / 19%);
+      transition: background-color 0.3s ease;
+    }
+
+    .icon-button i {
+      color: var(--black);
+      font-size: 24px;
+    }
+
+    .icon-button .material-icons {
+      color: var(--black);
+      font-size: 24px;
+    }
+
+    .icon-button:hover {
+      background-color: var(--icon-background);
+    }
+
+    .icon-button:hover i,
+    .icon-button:hover .material-icons {
+      color: var(--white);
+    }
+
+    #removeSave {
+      background: #f00;
+    }
+
+    #removeSave i {
+      color: #fff;
+    }
+
+    #removeSave:hover {
+      background: #ff0000b3;
+    }
+
+    .icon-button::after {
+      position: absolute;
+      top: 50%;
+      left: -100%;
+      transform: translate(-60%, -50%);
+      font-size: 1em;
+      color: var(--black);
+      background-color: var(--white);
+      padding: 5px 10px;
+      border-radius: 8px;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      visibility: hidden;
+    }
+
+    .icon-button:hover::after {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    #toggleTheme::after {
+      content: "Mudar tema";
+    }
+
+    #readText::after {
+      content: "Doc. solução";
+    }
+
+    #removeSave::after {
+      content: "Delete data";
+    }
+
+    .card {
+      background-color: var(--cards-green);
+      border-radius: 10px;
+      padding: 0px;
+      display: flex;
+      flex-direction: column;
+      transition: 0.3s;
+    }
+
+    .title {
+      text-align: center;
+      font-size: 2.4em;
+      color: var(--yellow);
+      margin: 0px;
+      line-height: 100%;
+    }
+
+    .subtitle {
+      text-align: center;
+      font-size: 1em;
+      color: var(--gray);
+      margin: 0px;
+      padding: 0px 0px 20px 0px;
+      border-bottom: solid 3px var(--gray);
+    }
+
+    .subtitle span {
+      color: var(--yellow);
+      font-weight: bold;
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin: 14px 0px 10px 0px;
+    }
+
+    .input-group label {
+      font-size: 1em;
+      color: var(--white);
+      font-weight: 600;
+    }
+
+    .input-field {
+      display: flex;
+      align-items: center;
+      background-color: #fff;
+      border-radius: 8px;
+      padding: 10px 15px;
+      border: solid 2px transparent;
+    }
+
+    .input-field input {
+      background: none;
+      border: none;
+      color: #1e1e1e;
+      width: 100%;
+      font-size: 1.2em;
+      font-weight: 500;
+      outline: none;
+    }
+
+    .input-field input::placeholder {
+      color: rgba(30, 30, 30, 0.68);
+    }
+
+    .input-field span {
+      color: #888;
+      margin-left: 10px;
+      font-size: 0.9em;
+    }
+
+    .result-display {
+      border-radius: 8px;
+      text-align: center;
+      font-size: 1.1em;
+      font-weight: 500;
+      color: var(--white);
+      margin-top: 0px;
+    }
+
+    #required-fuel {
+      font-weight: 700;
+    }
+
+    .button {
+      background-color: var(--yellow);
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1.1em;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .button:hover {
+      background-color: var(--yellow);
+    }
+
+    .fuel-stations-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 20px 10px;
+      margin-top: 20px;
+    }
+
+    .fuel-station-card {
+      position: relative;
+      background-color: var(--fuel-card-black);
+      border-radius: 10px;
+      padding: 15px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.9em;
+      color: var(--white);
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+
+    .fuel-station-card .material-icons {
+      color: var(--yellow);
+      font-size: 20px;
+    }
+
+    .fuel-station-card span {
+      color: var(--white);
+      font-size: 1.2em;
+      font-weight: 500;
+      text-align: center;
+      width: 100%;
+    }
+
+    .fuel-station-card .price {
+      font-weight: bold;
+      font-size: 1.4em;
+      color: var(--yellow);
+      background: transparent;
+      width: 100%;
+      min-width: 0px;
+      outline-width: 0px;
+      border: solid 2px var(--yellow);
+      border-radius: 6px;
+      padding: 4px 10px;
+      box-sizing: border-box;
+    }
+
+    .deletePoint {
+      position: absolute;
+      right: -10px;
+      top: -10px;
+      background: rgb(255, 0, 0);
+      color: #fff;
+      cursor: pointer;
+      height: 32px;
+      width: 32px;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      border: none;
+      outline-width: 0px;
+      z-index: 2;
+      padding: 0px;
+    }
+
+    .deletePoint ion-icon {
+      height: 85%;
+      width: 85%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+
+    .summary-section {
+      box-sizing: border-box;
+      position: fixed;
+      backdrop-filter: blur(10px);
+      bottom: 20px;
+      width: calc(100vw - 80px);
+      background-color: var(--background-footer);
+      box-shadow: 0 0px 20px rgba(0, 0, 0, 0.548);
+      border-radius: 23px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      z-index: 3;
+    }
+
+    .summary-text {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .summary-text-2 {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: flex-end;
+      border-bottom: dashed 2px var(--gray);
+    }
+
+    .summary-label {
+      font-size: 1em;
+      font-weight: 500;
+      color: var(--white);
+    }
+
+    .summary-value {
+      font-size: 1.2em;
+      font-weight: bold;
+      color: var(--yellow);
+    }
+
+    .daily-cost {
+      font-size: 2.2em;
+      font-weight: bold;
+      color: var(--yellow);
+      text-align: right;
+      line-height: 115%;
+    }
+
+    .message-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: #3a3a3a;
+      color: #e0e0e0;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      text-align: center;
+    }
+
+    .message-box i {
+      font-size: 32px;
+      color: var(--yellow);
+    }
+
+    .message-box p {
+      margin: 0;
+      font-size: 1.2em;
+    }
+
+    .message-box button {
+      margin-top: 15px;
+      background-color: var(--yellow);
+      color: #1e1e1e;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1em;
+      font-weight: 600;
+    }
+
+    .loading-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: var(--loading-background);
+      backdrop-filter: blur(5px);
+      color: var(--white);
+      font-size: 2em;
+      font-weight: 600;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+
+    .loader {
+      position: relative;
+      height: 40px;
+      width: 6px;
+      color: var(--white);
+      animation: paddles 0.75s ease-out infinite;
+    }
+
+    .loader:before {
+      content: "";
+      position: absolute;
+      margin: 0 auto;
+      left: 0;
+      right: 0;
+      top: 15px;
+      width: 12px;
+      height: 12px;
+      background-color: var(--yellow);
+      border-radius: 50%;
+      animation: ballbounce 0.6s ease-out infinite;
+    }
+
+    @keyframes paddles {
+      0% {
+        box-shadow: -25px -10px, 25px 10px;
       }
 
-      .light {
-        --black: #fff;
-        --white: #1e1e1e;
-        --background-green: #eee;
-        --cards-green: #e5f6ff;
-        --gray: #223037;
-        --yellow: #ffa800;
-        --green: #00b1ab;
-        --background-footer: #ffffffba;
-        --icon-background: #ffffff;
-        --fuel-card-black: #fff;
-        --loading-background: rgba(255, 255, 255, 0.8);
+      50% {
+        box-shadow: -25px 8px, 25px -10px;
       }
 
+      100% {
+        box-shadow: -25px -10px, 25px 10px;
+      }
+    }
+
+    @keyframes ballbounce {
+      0% {
+        transform: translateX(-20px) scale(1, 1.2);
+      }
+
+      25% {
+        transform: scale(1.2, 1);
+      }
+
+      50% {
+        transform: translateX(15px) scale(1, 1.2);
+      }
+
+      75% {
+        transform: scale(1.2, 1);
+      }
+
+      100% {
+        transform: translateX(-20px);
+      }
+    }
+
+    .loader-bottomDiv {
+      position: absolute;
+      bottom: 20px;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      width: calc(100% - 80px);
+    }
+
+    .loader-bottomDiv a {
+      color: var(--white);
+      text-decoration: none;
+      font-size: 0.5em;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .loader-bottomDiv a ion-icon {
+      font-size: 1.4em;
+      color: var(--white);
+    }
+
+    .cimatecFordLogo {
+      height: 50px;
+      width: auto;
+      object-fit: contain;
+      background: #1e1e1e;
+      padding: 12px;
+      border-radius: 10px;
+    }
+
+    .docSection {
+      box-sizing: border-box;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      overflow: auto;
+      background-color: var(--loading-background);
+      backdrop-filter: blur(5px);
+      color: var(--white);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      z-index: 5;
+      padding: 40px;
+    }
+
+    .closeButton {
+      position: absolute;
+      top: 40px;
+      right: 40px;
+      background: var(--white);
+      color: var(--black);
+      border: none;
+      border-radius: 12px;
+      width: 50px;
+      height: 50px;
+      font-size: 30px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      box-shadow: inset 0px -4px 1px rgba(0, 0, 0, 0.42),
+        0px -3px 6px 0px rgb(0 0 0 / 19%);
+      transition: background-color 0.3s ease;
+    }
+
+    .docSection h2 {
+      font-size: 1.8em;
+      margin-bottom: 10px;
+    }
+
+    .docSection p {
+      font-size: 1.2em;
+      margin-bottom: 20px;
+    }
+
+    .docSection code {
+      background-color: #f0f0f0;
+      padding: 2px 4px;
+      border-radius: 4px;
+      color: #d63384;
+    }
+
+    .buttonSpeech {
+      background: var(--white);
+      color: var(--black);
+      border: none;
+      border-radius: 12px;
+      width: 50px;
+      height: 50px;
+      min-height: 50px;
+      font-size: 18px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      box-shadow: inset 0px -4px 1px rgba(0, 0, 0, 0.42),
+        0px -3px 6px 0px rgb(0 0 0 / 19%);
+      transition: background-color 0.3s ease;
+    }
+
+    .buttonSpeech i {
+      font-size: 1.2em;
+    }
+
+    .docSection button.closeButton:hover,
+    .buttonSpeech:hover {
+      background-color: var(--yellow);
+      color: var(--black);
+    }
+
+    @media (max-width: 768px) {
       body {
-        font-family: "Poppins", sans-serif;
-        background-color: var(--cards-green);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        min-height: 100vh;
-        margin: 0;
-        padding: 20px 20px 200px 20px;
-        box-sizing: border-box;
-        position: relative;
-        transition: 0.3s;
+        padding: 80px 0px 150px 0px;
       }
 
       .container {
-        border-radius: 15px;
-        padding: 30px;
-        width: 100%;
-        max-width: 720px;
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
-        transition: 0.3s;
+        padding: 20px;
       }
 
       .header-icons {
-        position: absolute;
+        flex-direction: row-reverse;
         top: 20px;
         right: 20px;
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
       }
 
       .icon-button {
-        position: relative;
-        background: var(--white);
-        border: none;
-        border-radius: 12px;
-        width: 50px;
-        height: 50px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        cursor: pointer;
-        box-shadow: inset 0px -4px 1px rgba(0, 0, 0, 0.42),
-          0px -3px 6px 0px rgb(0 0 0 / 19%);
-        transition: background-color 0.3s ease;
+        width: 40px;
+        height: 40px;
       }
 
-      .icon-button i {
-        color: var(--black);
-        font-size: 24px;
-      }
-
+      .icon-button i,
       .icon-button .material-icons {
-        color: var(--black);
-        font-size: 24px;
-      }
-
-      .icon-button:hover {
-        background-color: var(--icon-background);
-      }
-
-      .icon-button:hover i,
-      .icon-button:hover .material-icons {
-        color: var(--white);
-      }
-
-      #removeSave {
-        background: #f00;
-      }
-      #removeSave i {
-        color: #fff;
-      }
-
-      #removeSave:hover {
-        background: #ff0000b3;
-      }
-
-      .icon-button::after {
-        position: absolute;
-        top: 50%;
-        left: -100%;
-        transform: translate(-60%, -50%);
-        font-size: 1em;
-        color: var(--black);
-        background-color: var(--white);
-        padding: 5px 10px;        
-        border-radius: 8px;
-        opacity: 0;
-        transition: opacity 0.3s ease;
-        visibility: hidden;
-      }
-      .icon-button:hover::after {
-        visibility: visible;
-        opacity: 1;
-      }
-
-      #toggleTheme::after {
-        content: "Mudar tema";
-      }
-      #readText::after {
-        content: "Doc. solução";
-      }
-      #removeSave::after {
-        content: "Delete data";
-      }
-
-      .card {
-        background-color: var(--cards-green);
-        border-radius: 10px;
-        padding: 0px;
-        display: flex;
-        flex-direction: column;
-        transition: 0.3s;
-      }
-
-      .title {
-        text-align: center;
-        font-size: 2.4em;
-        color: var(--yellow);
-        margin: 0px;
-        line-height: 100%;
-      }
-
-      .subtitle {
-        text-align: center;
-        font-size: 1em;
-        color: var(--gray);
-        margin: 0px;
-        padding: 0px 0px 20px 0px;
-        border-bottom: solid 3px var(--gray);
-      }
-
-      .subtitle span {
-        color: var(--yellow);
-        font-weight: bold;
-      }
-
-      .input-group {
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-        margin: 14px 0px 10px 0px;
-      }
-
-      .input-group label {
-        font-size: 1em;
-        color: var(--white);
-        font-weight: 600;
-      }
-
-      .input-field {
-        display: flex;
-        align-items: center;
-        background-color: #fff;
-        border-radius: 8px;
-        padding: 10px 15px;
-      }
-
-      .input-field input {
-        background: none;
-        border: none;
-        color: #1e1e1e;
-        width: 100%;
-        font-size: 1.2em;
-        font-weight: 500;
-        outline: none;
-      }
-
-      .input-field input::placeholder {
-        color: rgba(30, 30, 30, 0.68);
-      }
-
-      .input-field span {
-        color: #888;
-        margin-left: 10px;
-        font-size: 0.9em;
-      }
-
-      .result-display {
-        border-radius: 8px;
-        text-align: center;
-        font-size: 1.1em;
-        font-weight: 500;
-        color: var(--white);
-        margin-top: 0px;
-      }
-
-      #required-fuel {
-        font-weight: 700;
-      }
-
-      .button {
-        background-color: var(--yellow);
-        color: white;
-        padding: 12px 20px;
-        border: none;
-        border-radius: 8px;
-        font-size: 1.1em;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-        width: 100%;
-        box-sizing: border-box;
-      }
-
-      .button:hover {
-        background-color: var(--yellow);
-      }
-
-      .fuel-stations-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-        gap: 10px;
-        margin-top: 20px;
-      }
-
-      .fuel-station-card {
-        position: relative;
-        background-color: var(--fuel-card-black);
-        border-radius: 10px;
-        padding: 15px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 5px;
-        font-size: 0.9em;
-        color: var(--white);
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-      }
-
-      .fuel-station-card .material-icons {
-        color: var(--yellow);
         font-size: 20px;
       }
 
-      .fuel-station-card span {
-        color: var(--white);
-        font-size: 1.2em;
-        font-weight: 500;
-        text-align: center;
-        width: 100%;
+      .closeButton {
+        top: 20px;
+        right: 20px;
       }
 
-      .fuel-station-card .price {
-        font-weight: bold;
-        font-size: 1.4em;
-        color: var(--yellow);
+      .docSection {
+        padding-top: 60px;
       }
 
-      .deletePoint {
-        position: absolute;
-        right: -10px;
-        top: -10px;
-        background: rgb(255, 0, 0);
-        color: #fff;
-        cursor: pointer;
-        height: 32px;
-        width: 32px;
-        border-radius: 50%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-        border: none;
-        outline-width: 0px;
-        z-index: 2;
-        padding: 0px;
-      }
-      .deletePoint ion-icon {
-        height: 85%;
-        width: 85%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
+      .input-group label {
         text-align: center;
       }
 
       .summary-section {
-        box-sizing: border-box;
-        position: fixed;
-        backdrop-filter: blur(10px);
-        bottom: 20px;
-        width: calc(100vw - 80px);
-        background-color: var(--background-footer);
-        box-shadow: 0 0px 20px rgba(0, 0, 0, 0.548);
-        border-radius: 23px;
-        padding: 20px;
-        display: flex;
-        flex-direction: column;
-        z-index: 3;
-      }
-
-      .summary-text {
-        display: flex;
-        flex-direction: column;
-        gap: 5px;
-      }
-
-      .summary-text-2 {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: flex-end;
-        border-bottom: dashed 2px var(--gray);
-      }
-
-      .summary-label {
-        font-size: 1em;
-        font-weight: 500;
-        color: var(--white);
-      }
-
-      .summary-value {
-        font-size: 1.2em;
-        font-weight: bold;
-        color: var(--yellow);
+        width: 100vw;
+        padding: 10px;
+        bottom: 0;
+        border-radius: 0px;
       }
 
       .daily-cost {
-        font-size: 2.2em;
-        font-weight: bold;
-        color: var(--yellow);
-        text-align: right;
-        line-height: 115%;
+        font-size: 1.5em;
       }
 
-      .message-box {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        position: fixed;
-        top: 50%;
+      .summary-text-2 {
+        margin-top: 14px;
+      }
+
+      .icon-button::after {
+        bottom: 0;
         left: 50%;
-        transform: translate(-50%, -50%);
-        background-color: #3a3a3a;
-        color: #e0e0e0;
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-        z-index: 1000;
-        text-align: center;
-      }
-      .message-box i {
-        font-size: 32px;
-        color: var(--yellow);
-      }
-      .message-box p {
-        margin: 0;
-        font-size: 1.2em;
-      }
-      .message-box button {
-        margin-top: 15px;
-        background-color: var(--yellow);
-        color: #1e1e1e;
-        padding: 10px 20px;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        font-size: 1em;
-        font-weight: 600;
+        transform: translate(-50%, 70%);
+        height: fit-content;
       }
 
-      .loading-screen {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: var(--loading-background);
-        backdrop-filter: blur(5px);
-        color: var(--white);
-        font-size: 2em;
-        font-weight: 600;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        z-index: 9999;
-      }
-
-      .loader {
-        position: relative;
-        height: 40px;
-        width: 6px;
-        color: var(--white);
-        animation: paddles 0.75s ease-out infinite;
-      }
-
-      .loader:before {
-        content: "";
-        position: absolute;
-        margin: 0 auto;
-        left: 0;
-        right: 0;
-        top: 15px;
-        width: 12px;
-        height: 12px;
-        background-color: var(--yellow);
-        border-radius: 50%;
-        animation: ballbounce 0.6s ease-out infinite;
-      }
-
-      @keyframes paddles {
-        0% {
-          box-shadow: -25px -10px, 25px 10px;
-        }
-
-        50% {
-          box-shadow: -25px 8px, 25px -10px;
-        }
-
-        100% {
-          box-shadow: -25px -10px, 25px 10px;
-        }
-      }
-
-      @keyframes ballbounce {
-        0% {
-          transform: translateX(-20px) scale(1, 1.2);
-        }
-
-        25% {
-          transform: scale(1.2, 1);
-        }
-
-        50% {
-          transform: translateX(15px) scale(1, 1.2);
-        }
-
-        75% {
-          transform: scale(1.2, 1);
-        }
-
-        100% {
-          transform: translateX(-20px);
-        }
-      }
       .loader-bottomDiv {
-        position: absolute;
-        bottom: 20px;
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content: space-between;
-        width: calc(100% - 80px);
-      }
-      .loader-bottomDiv a {
-        color: var(--white);
-        text-decoration: none;
-        font-size: 0.5em;
-        display: flex;
-        align-items: center;
-        gap: 5px;
-      }
-      .loader-bottomDiv a ion-icon {
-        font-size: 1.4em;
-        color: var(--white);
-      }
-      .cimatecFordLogo {
-        height: 50px;
-        width: auto;
-        object-fit: contain;
-        background: #1e1e1e;
-        padding: 12px;
-        border-radius: 10px;
-      }
-      .docSection {
-        box-sizing: border-box;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        overflow: auto;
-        background-color: var(--loading-background);
-        backdrop-filter: blur(5px);
-        color: var(--white);
-        display: flex;
+        width: calc(100% - 40px);
+        bottom: 10px;
         flex-direction: column;
-        justify-content: flex-start;
         align-items: center;
-        z-index: 5;
-        padding: 40px;
+        gap: 20px;
       }
+    }
+  </style>
+</head>
 
-      .closeButton {
-        position: absolute;
-        top: 40px;
-        right: 40px;
-        background: var(--white);
-        color: var(--black);
-        border: none;
-        border-radius: 12px;
-        width: 50px;
-        height: 50px;
-        font-size: 30px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        cursor: pointer;
-        box-shadow: inset 0px -4px 1px rgba(0, 0, 0, 0.42),
-          0px -3px 6px 0px rgb(0 0 0 / 19%);
-        transition: background-color 0.3s ease;
-      }
-      .docSection h2 {
-        font-size: 1.8em;
-        margin-bottom: 10px;
-      }
-      .docSection p {
-        font-size: 1.2em;
-        margin-bottom: 20px;
-      }
-      .docSection code {
-        background-color: #f0f0f0;
-        padding: 2px 4px;
-        border-radius: 4px;
-        color: #d63384;
-      }
-
-      .buttonSpeech {
-        background: var(--white);
-        color: var(--black);
-        border: none;
-        border-radius: 12px;
-        width: 50px;
-        height: 50px;
-        min-height: 50px;
-        font-size: 18px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        cursor: pointer;
-        box-shadow: inset 0px -4px 1px rgba(0, 0, 0, 0.42),
-          0px -3px 6px 0px rgb(0 0 0 / 19%);
-        transition: background-color 0.3s ease;
-      }
-      .buttonSpeech i {
-        font-size: 1.2em;
-      }
-      .docSection button.closeButton:hover,
-      .buttonSpeech:hover {
-        background-color: var(--yellow);
-        color: var(--black);
-      }
-      @media (max-width: 768px) {
-        body {
-          padding: 80px 0px 150px 0px;
-        }
-        .container {
-          padding: 20px;
-        }
-        .header-icons {
-          flex-direction: row-reverse;
-          top: 20px;
-          right: 20px;
-        }
-        .icon-button {
-          width: 40px;
-          height: 40px;
-        }
-        .icon-button i,
-        .icon-button .material-icons {
-          font-size: 20px;
-        }
-        .closeButton {
-          top: 20px;
-          right: 20px;
-        }
-        .docSection {
-          padding-top: 60px;
-        }
-        .input-group label {
-          text-align: center;
-        }
-        .summary-section {
-          width: 100vw;
-          padding: 10px;
-          bottom: 0;
-          border-radius: 0px;
-        }
-        .daily-cost {
-          font-size: 1.5em;
-        }
-        .summary-text-2 {
-          margin-top: 14px;
-        }
-        .icon-button::after {
-          bottom: 0;
-          left: 50%;
-          transform: translate(-50%, 70%);
-          height: fit-content;
-        }
-        .loader-bottomDiv {
-          width: calc(100% - 40px);
-          bottom: 10px;
-          flex-direction: column;
-          align-items: center;
-          gap: 20px;
-        }
-      }
-    </style>
-  </head>
-
-  <body>
-    <div class="loading-screen" id="loadingScreen">
-      <div class="loader"></div>
-      <p>Carregando...</p>
-      <div class="loader-bottomDiv">
-        <a class="jvsRef" href="https://github.com/jvs-dev"
-          ><ion-icon name="code-slash-outline"></ion-icon>jvs-dev</a
-        >
-        <img
-          class="cimatecFordLogo"
-          src="https://cimatecead.senaicimatec.com.br/Arquivos/Embed/Canvas/avulsos/fordITLP/img/frame-10846-1@2x.png"
-          alt="Logo CIMATEC & Ford"
-        />
-      </div>
+<body>
+  <div class="loading-screen" id="loadingScreen">
+    <div class="loader"></div>
+    <p>Carregando...</p>
+    <div class="loader-bottomDiv">
+      <a class="jvsRef" href="https://github.com/jvs-dev"><ion-icon name="code-slash-outline"></ion-icon>jvs-dev</a>
+      <img class="cimatecFordLogo"
+        src="https://cimatecead.senaicimatec.com.br/Arquivos/Embed/Canvas/avulsos/fordITLP/img/frame-10846-1@2x.png"
+        alt="Logo CIMATEC & Ford" />
     </div>
-    <div class="header-icons">
-      <button class="icon-button" id="removeSave">
-        <i class="bi bi-trash"></i>
-      </button>
-      <button class="icon-button" id="toggleTheme">
-        <span class="material-icons">wb_sunny</span>
-      </button>
-      <button class="icon-button" id="readText">
-        <i class="bi bi-journal-text"></i>
-      </button>
-    </div>
+  </div>
+  <div class="header-icons">
+    <button class="icon-button" id="removeSave">
+      <i class="bi bi-trash"></i>
+    </button>
+    <button class="icon-button" id="toggleTheme">
+      <span class="material-icons">wb_sunny</span>
+    </button>
+    <button class="icon-button" id="readText">
+      <i class="bi bi-journal-text"></i>
+    </button>
+  </div>
 
-    <div class="container">
-      <div class="card">
-        <h1 class="title">CALCULE SEUS GASTOS</h1>
-        <p class="subtitle">
-          CALCULE FACILMENTE SEUS GASTOS COM <span>COMBUSTÍVEL</span>
-        </p>
+  <div class="container">
+    <div class="card">
+      <h1 class="title">CALCULE SEUS GASTOS</h1>
+      <p class="subtitle">
+        CALCULE FACILMENTE SEUS GASTOS COM <span>COMBUSTÍVEL</span>
+      </p>
 
-        <div class="input-group">
-          <label for="distance">DISTÂNCIA DA SUA CASA ATÉ SEU TRABALHO</label>
-          <div class="input-field">
-            <input
-              type="number"
-              id="distance"
-              placeholder="0"
-              max="1000"
-              min="0"
-            />
-            <span>(KM)</span>
-          </div>
-        </div>
-
-        <div class="input-group">
-          <label for="consumption">QUAL O CONSUMO MÉDIO DO VEÍCULO</label>
-          <div class="input-field">
-            <input
-              type="number"
-              id="consumption"
-              placeholder="0"
-              max="1000"
-              min="0"
-            />
-            <span>(KM/L)</span>
-          </div>
-        </div>
-
-        <div class="result-display">
-          CONSUMO NECESSÁRIO(IDA E VOLTA): <span id="required-fuel">0L</span>
+      <div class="input-group">
+        <label for="distance">DISTÂNCIA DA SUA CASA ATÉ SEU TRABALHO</label>
+        <div class="input-field">
+          <input type="number" id="distance" placeholder="0" max="1000" min="0" />
+          <span>(KM)</span>
         </div>
       </div>
 
-      <div class="card">
-        <div class="input-group">
-          <label for="fuel-price">VALOR DO COMBUSTÍVEL PESQUISADO</label>
-          <div class="input-field">
-            <input
-              type="number"
-              id="fuel-price"
-              placeholder="0.00"
-              max="1000"
-              min="0"
-            />
-            <span>(R$)</span>
-          </div>
+      <div class="input-group">
+        <label for="consumption">QUAL O CONSUMO MÉDIO DO VEÍCULO</label>
+        <div class="input-field">
+          <input type="number" id="consumption" placeholder="0" max="1000" min="0" />
+          <span>(KM/L)</span>
         </div>
-        <button class="button" id="register-button">REGISTRAR</button>
       </div>
 
-      <div class="fuel-stations-grid" id="fuelStations">
-        <div class="fuel-station-card">
-          <span class="material-icons">location_on</span>
-          <span>POSTO 1</span>
-          <span class="price">R$ 10</span>
-        </div>
-      </div>
-    </div>
-    <div class="summary-section">
-      <div class="summary-text">
-        <div>
-          <span class="summary-label">Menor valor pesquisado:</span>
-          <span class="summary-value" id="lowest-price">R$ 0.00</span>
-        </div>
-        <div>
-          <span class="summary-label">Média dos valores pesquisados:</span>
-          <span class="summary-value" id="medium-price">R$ 0.00</span>
-        </div>
-      </div>
-      <div class="summary-text-2">
-        <span class="summary-label">Gasto diário (ida e volta):</span>
-        <div class="daily-cost" id="daily-cost">R$ 0.00</div>
+      <div class="result-display">
+        CONSUMO NECESSÁRIO(IDA E VOLTA): <span id="required-fuel">0L</span>
       </div>
     </div>
 
-    <script
-      type="module"
-      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
-    ></script>
-    <script
-      nomodule
-      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
-    ></script>
-    <script>
-      const distanceInput = document.getElementById("distance");
-      const consumptionInput = document.getElementById("consumption");
-      const requiredFuelSpan = document.getElementById("required-fuel");
-      const fuelPriceInput = document.getElementById("fuel-price");
-      const registerButton = document.getElementById("register-button");
-      const lowestPriceSpan = document.getElementById("lowest-price");
-      const mediumPrice = document.getElementById("medium-price");
-      const dailyCostSpan = document.getElementById("daily-cost");
-      const toggleTheme = document.getElementById("toggleTheme");
-      const removeSave = document.getElementById("removeSave");
-      const loadingScreen = document.getElementById("loadingScreen");
-      const readText = document.getElementById("readText");
-      const body = document.querySelector("body");
-      let isSpeechEnabled = false;
-      let registeredPrices = [];
-      let currentFuelConsumption = 0;
+    <div class="card">
+      <div class="input-group">
+        <label for="searchPoints">Quantos postos você pesquisou?</label>
+        <div class="input-field">
+          <input type="number" id="searchPoints" placeholder="0" min="0" />
+        </div>
+      </div>
+      <button class="button" id="register-button">REGISTRAR</button>
+    </div>
 
-      distanceInput.value =
-        localStorage.getItem("distance") != null
-          ? localStorage.getItem("distance")
-          : null;
+    <div class="fuel-stations-grid" id="fuelStations">
+      <div class="fuel-station-card">
+        <span class="material-icons">location_on</span>
+        <span>POSTO 1</span>
+        <span class="price">R$ 10</span>
+      </div>
+    </div>
+  </div>
+  <div class="summary-section">
+    <div class="summary-text">
+      <div>
+        <span class="summary-label">Menor valor pesquisado:</span>
+        <span class="summary-value" id="lowest-price">R$ 0.00</span>
+      </div>
+      <div>
+        <span class="summary-label">Média dos valores pesquisados:</span>
+        <span class="summary-value" id="medium-price">R$ 0.00</span>
+      </div>
+    </div>
+    <div class="summary-text-2">
+      <span class="summary-label">Gasto diário (ida e volta):</span>
+      <div class="daily-cost" id="daily-cost">R$ 0.00</div>
+    </div>
+  </div>
 
-      consumptionInput.value =
-        localStorage.getItem("consume") != null
-          ? localStorage.getItem("consume")
-          : null;
+  <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+  <script>
+    const distanceInput = document.getElementById("distance");
+    const consumptionInput = document.getElementById("consumption");
+    const requiredFuelSpan = document.getElementById("required-fuel");
+    const searchPointsInput = document.getElementById("searchPoints");
+    const registerButton = document.getElementById("register-button");
+    const lowestPriceSpan = document.getElementById("lowest-price");
+    const mediumPrice = document.getElementById("medium-price");
+    const dailyCostSpan = document.getElementById("daily-cost");
+    const toggleTheme = document.getElementById("toggleTheme");
+    const removeSave = document.getElementById("removeSave");
+    const loadingScreen = document.getElementById("loadingScreen");
+    const readText = document.getElementById("readText");
+    const body = document.querySelector("body");
+    let isSpeechEnabled = false;
+    let registeredPrices = [];
+    let currentFuelConsumption = 0;
 
-      registeredPrices =
-        localStorage.getItem("prices") != null
-          ? localStorage.getItem("prices").split(",")
-          : [];
+    distanceInput.value =
+      localStorage.getItem("distance") != null || localStorage.getItem("distance") != "0"
+        ? localStorage.getItem("distance")
+        : null;
 
-      if (localStorage.getItem("theme") == "light") {
+    consumptionInput.value =
+      localStorage.getItem("consume") != null || localStorage.getItem("consume") != "0"
+        ? localStorage.getItem("consume")
+        : null;
+
+    registeredPrices =
+      localStorage.getItem("prices") != null
+        ? localStorage.getItem("prices").split(",")
+        : [];
+
+    if (localStorage.getItem("theme") == "light") {
+      body.classList.add("light");
+    }
+
+    toggleTheme.addEventListener("click", () => {
+      if (body.classList.contains("light")) {
+        body.classList.remove("light");
+        localStorage.setItem("theme", "dark");
+      } else {
         body.classList.add("light");
+        localStorage.setItem("theme", "light");
       }
+    });
 
-      toggleTheme.addEventListener("click", () => {
-        if (body.classList.contains("light")) {
-          body.classList.remove("light");
-          localStorage.setItem("theme", "dark");
-        } else {
-          body.classList.add("light");
-          localStorage.setItem("theme", "light");
-        }
-      });
-
-      readText.addEventListener("click", () => {
-        body.style.overflow = "hidden";
-        let div = document.createElement("div");
-        div.classList.add("docSection");
-        div.innerHTML = `     
+    readText.addEventListener("click", () => {
+      body.style.overflow = "hidden";
+      let div = document.createElement("div");
+      div.classList.add("docSection");
+      div.innerHTML = `     
           <button type="button" class="closeButton"><ion-icon name="close-circle-outline"></ion-icon></button>     
           <h2>Sobre a Solução</h2>
           <p>
@@ -840,173 +845,198 @@
           </p>
           <button type="button" class="buttonSpeech"><i class="bi bi-volume-up"></i></button>
         `;
-        document.body.appendChild(div);
-        const closeButton = div.querySelector(".closeButton");
-        const buttonSpeech = div.querySelector(".buttonSpeech");
-        buttonSpeech.addEventListener("click", () => {
-          if (isSpeechEnabled == false) {
-            isSpeechEnabled = true;
-            buttonSpeech.innerHTML = '<i class="bi bi-volume-mute"></i>';
-            const utterance = new SpeechSynthesisUtterance(div.textContent);
-            utterance.lang = "pt-BR";
-            speechSynthesis.speak(utterance);
-          } else {
-            isSpeechEnabled = false;
-            buttonSpeech.innerHTML = '<i class="bi bi-volume-up"></i>';
-            speechSynthesis.cancel();
-          }
-        });
-        closeButton.addEventListener("click", () => {
-          document.body.removeChild(div);
-          body.style.overflow = "";
-        });
+      document.body.appendChild(div);
+      const closeButton = div.querySelector(".closeButton");
+      const buttonSpeech = div.querySelector(".buttonSpeech");
+      buttonSpeech.addEventListener("click", () => {
+        if (isSpeechEnabled == false) {
+          isSpeechEnabled = true;
+          buttonSpeech.innerHTML = '<i class="bi bi-volume-mute"></i>';
+          const utterance = new SpeechSynthesisUtterance(div.textContent);
+          utterance.lang = "pt-BR";
+          speechSynthesis.speak(utterance);
+        } else {
+          isSpeechEnabled = false;
+          buttonSpeech.innerHTML = '<i class="bi bi-volume-up"></i>';
+          speechSynthesis.cancel();
+        }
       });
-
-      removeSave.addEventListener("click", () => {
-        localStorage.removeItem("dailyCost");
-        localStorage.removeItem("distance");
-        localStorage.removeItem("lowest");
-        localStorage.removeItem("medium");
-        localStorage.removeItem("consume");
-        localStorage.removeItem("prices");
-        localStorage.removeItem("required");
-        window.location.reload();
+      closeButton.addEventListener("click", () => {
+        document.body.removeChild(div);
+        body.style.overflow = "";
       });
+    });
 
-      function createMessage(text) {
-        let messageBox = document.createElement("div");
-        messageBox.classList.add("message-box");
-        messageBox.innerHTML = `
+    removeSave.addEventListener("click", () => {
+      localStorage.removeItem("dailyCost");
+      localStorage.removeItem("distance");
+      localStorage.removeItem("lowest");
+      localStorage.removeItem("medium");
+      localStorage.removeItem("consume");
+      localStorage.removeItem("prices");
+      localStorage.removeItem("required");
+      window.location.reload();
+    });
+
+    function createMessage(text) {
+      let messageBox = document.createElement("div");
+      messageBox.classList.add("message-box");
+      messageBox.innerHTML = `
                     <i class="bi bi-exclamation-triangle-fill"></i>
                     <p>${text}</p>
                     <button>OK</button>
                 `;
-        document.body.appendChild(messageBox);
+      document.body.appendChild(messageBox);
 
-        messageBox.querySelector("button").addEventListener("click", () => {
-          document.body.removeChild(messageBox);
-        });
-      }
+      messageBox.querySelector("button").addEventListener("click", () => {
+        document.body.removeChild(messageBox);
+      });
+    }
 
-      function calculateRequiredFuel() {
-        const distance = parseFloat(distanceInput.value);
-        const consume = parseFloat(consumptionInput.value);
+    function calculateRequiredFuel() {
+      const distance = parseFloat(distanceInput.value);
+      const consume = parseFloat(consumptionInput.value);
 
-        if (distance > 0 && consume > 0) {
-          currentFuelConsumption = (distance * 2) / consume;
-          requiredFuelSpan.textContent = `${currentFuelConsumption.toFixed(
-            2
-          )}L`;
-          localStorage.setItem("required", currentFuelConsumption.toFixed(2));
-          localStorage.setItem("distance", distance.toFixed(2));
-          localStorage.setItem("consume", consume.toFixed(2));
-        } else {
-          currentFuelConsumption = 0;
-          requiredFuelSpan.textContent = "0L";
-          localStorage.setItem("required", 0);
-          localStorage.setItem("distance", 0);
-          localStorage.setItem("consume", 0);
+      if (distance > 0 && consume > 0) {
+        console.log(distance);
+        console.log(consume);
+        currentFuelConsumption = (distance * 2) / consume;
+        isNaN(currentFuelConsumption) ? currentFuelConsumption = 0 : null
+        requiredFuelSpan.textContent = `${currentFuelConsumption}L`;
+        localStorage.setItem("required", currentFuelConsumption.toFixed(2));
+        localStorage.setItem("distance", distance.toFixed(2));
+        localStorage.setItem("consume", consume.toFixed(2));
+      } else {
+        currentFuelConsumption = 0;
+        requiredFuelSpan.textContent = "0L";
+        if (distance < 0 || isNaN(distance)) {
+          distanceInput.value = isNaN(localStorage.getItem("distance")) && 0
+          distanceInput.parentElement.style.border = "solid 2px #f00"
+          distanceInput.parentElement.style.transition = "1s linear"
+          setTimeout(() => {
+            distanceInput.parentElement.style.border = "solid 2px transparent"
+          }, 1000);
         }
-        updateDailyCost();
+        if (consume < 0 || isNaN(consume)) {
+          consumptionInput.value = isNaN(localStorage.getItem("consume")) && 0
+          consumptionInput.parentElement.style.border = "solid 2px #f00"
+          consumptionInput.parentElement.style.transition = "1s linear"
+          setTimeout(() => {
+            consumptionInput.parentElement.style.border = "solid 2px transparent"
+          }, 1000);
+        }
       }
+      updateDailyCost();
+    }
 
-      function updateFuelStationsDisplay() {
-        const fuelStationGrid = document.getElementById("fuelStations");
-        fuelStationGrid.innerHTML = "";
-        registeredPrices.forEach((price, index) => {
-          let button = document.createElement("button");
-          button.className = "deletePoint";
-          button.type = "button";
-          button.innerHTML =
-            '<ion-icon name="close-circle-outline"></ion-icon>';
-          button.addEventListener("click", () => {
-            registeredPrices.splice(index, 1);
+    function updateFuelStationsDisplay() {
+      const fuelStationGrid = document.getElementById("fuelStations");
+      fuelStationGrid.innerHTML = "";
+      registeredPrices.forEach((price, index) => {
+        let button = document.createElement("button");
+        button.className = "deletePoint";
+        button.type = "button";
+        button.innerHTML =
+          '<ion-icon name="close-circle-outline"></ion-icon>';
+        button.addEventListener("click", () => {
+          registeredPrices.splice(index, 1);
+          localStorage.setItem("prices", registeredPrices);
+          updateFuelStationsDisplay();
+          updateLowestPrice();
+          updateMediumPrice();
+        });
+        const stationCard = document.createElement("div");
+        stationCard.className = "fuel-station-card";
+        stationCard.innerHTML = `          
+                    <span class="material-icons">location_on</span>
+                    <span>POSTO ${index + 1}</span>
+                    <input type="number" class="price" min="0" value="${Number(price).toFixed(2)}" />
+                `;
+        const inputPrice = stationCard.querySelector(".price");
+        stationCard.appendChild(button);
+        fuelStationGrid.appendChild(stationCard);
+        inputPrice.onchange = () => {
+          if (inputPrice.value > 0) {
+            registeredPrices[index] = inputPrice.value
             localStorage.setItem("prices", registeredPrices);
             updateFuelStationsDisplay();
             updateLowestPrice();
             updateMediumPrice();
-          });
-          const stationCard = document.createElement("div");
-          stationCard.className = "fuel-station-card";
-          stationCard.innerHTML = `          
-                    <span class="material-icons">location_on</span>
-                    <span>POSTO ${index + 1}</span>
-                    <span class="price">R$ ${Number(price).toFixed(2)}</span>
-                `;
-          stationCard.appendChild(button);
-          fuelStationGrid.appendChild(stationCard);
-        });
-      }
-
-      function updateLowestPrice() {
-        if (registeredPrices.length > 0) {
-          const lowest = Math.min(...registeredPrices);
-          lowestPriceSpan.textContent = `R$ ${lowest.toFixed(2)}`;
-          localStorage.setItem("lowest", lowest.toFixed(2));
-        } else {
-          lowestPriceSpan.textContent = "R$ 0.00";
-          localStorage.setItem("lowest", 0);
-        }
-        updateDailyCost();
-      }
-
-      function updateMediumPrice() {
-        if (registeredPrices.length > 0) {
-          let medium = 0;
-          registeredPrices.forEach((cost) => {
-            medium = medium + Number(cost);
-          });
-          medium = medium / registeredPrices.length;
-          mediumPrice.textContent = `R$ ${medium.toFixed(2)}`;
-          localStorage.setItem("medium", medium.toFixed(2));
-        } else {
-          mediumPrice.textContent = "R$ 0.00";
-          localStorage.setItem("medium", 0);
-        }
-      }
-
-      function updateDailyCost() {
-        const lowest =
-          registeredPrices.length > 0 ? Math.min(...registeredPrices) : 0;
-        const dailyCost = lowest * currentFuelConsumption;
-        dailyCostSpan.textContent = `R$ ${dailyCost.toFixed(2)}`;
-        localStorage.setItem("dailyCost", dailyCost.toFixed(2));
-      }
-
-      distanceInput.addEventListener("input", calculateRequiredFuel);
-      consumptionInput.addEventListener("input", calculateRequiredFuel);
-
-      registerButton.addEventListener("click", () => {
-        const price = parseFloat(fuelPriceInput.value);
-        if (!isNaN(price) && price > 0) {
-          if (registeredPrices.length < 10) {
-            registeredPrices.push(price);
-            localStorage.setItem("prices", registeredPrices);
           } else {
-            createMessage("Número máximo de postos atingido.");
+            inputPrice.value = 0
           }
-
-          fuelPriceInput.value = "";
-          updateFuelStationsDisplay();
-          updateLowestPrice();
-          updateMediumPrice();
-        } else {
-          createMessage(
-            "Por favor, insira um valor válido para o combustível."
-          );
         }
       });
+    }
 
-      window.addEventListener("load", () => {
-        setTimeout(() => {
-          loadingScreen.style.display = "none";
-        }, 1000);
-      });
+    function updateLowestPrice() {
+      if (registeredPrices.length > 0) {
+        const lowest = Math.min(...registeredPrices);
+        lowestPriceSpan.textContent = `R$ ${lowest.toFixed(2)}`;
+        localStorage.setItem("lowest", lowest.toFixed(2));
+      } else {
+        lowestPriceSpan.textContent = "R$ 0.00";
+        localStorage.setItem("lowest", 0);
+      }
+      updateDailyCost();
+    }
 
-      updateFuelStationsDisplay();
-      updateLowestPrice();
-      updateMediumPrice();
-      calculateRequiredFuel();
-    </script>
-  </body>
+    function updateMediumPrice() {
+      if (registeredPrices.length > 0) {
+        let medium = 0;
+        registeredPrices.forEach((cost) => {
+          medium = medium + Number(cost);
+        });
+        medium = medium / registeredPrices.length;
+        mediumPrice.textContent = `R$ ${medium.toFixed(2)}`;
+        localStorage.setItem("medium", medium.toFixed(2));
+      } else {
+        mediumPrice.textContent = "R$ 0.00";
+        localStorage.setItem("medium", 0);
+      }
+    }
+
+    function updateDailyCost() {
+      const lowest =
+        registeredPrices.length > 0 ? Math.min(...registeredPrices) : 0;
+      const dailyCost = lowest * currentFuelConsumption;
+      dailyCostSpan.textContent = `R$ ${dailyCost.toFixed(2)}`;
+      localStorage.setItem("dailyCost", dailyCost.toFixed(2));
+    }
+
+    distanceInput.addEventListener("change", calculateRequiredFuel);
+    consumptionInput.addEventListener("change", calculateRequiredFuel);
+
+    registerButton.addEventListener("click", () => {
+      const points = parseFloat(searchPointsInput.value);
+      if (!isNaN(points) && points > 0) {
+        registeredPrices = []
+        for (let index = 0; index < points; index++) {
+          registeredPrices.push(0);
+        }
+        localStorage.setItem("prices", registeredPrices);
+        searchPointsInput.value = "";
+        updateFuelStationsDisplay();
+        updateLowestPrice();
+        updateMediumPrice();
+      } else {
+        createMessage(
+          "Por favor, insira um valor válido para o combustível."
+        );
+      }
+    });
+
+    window.addEventListener("load", () => {
+      setTimeout(() => {
+        loadingScreen.style.display = "none";
+      }, 1000);
+    });
+
+    updateFuelStationsDisplay();
+    updateLowestPrice();
+    updateMediumPrice();
+    calculateRequiredFuel();    
+  </script>
+</body>
+
 </html>
