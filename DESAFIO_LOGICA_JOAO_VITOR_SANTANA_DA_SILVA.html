@@ -135,6 +135,7 @@
       opacity: 0;
       transition: opacity 0.3s ease;
       visibility: hidden;
+      white-space: nowrap;
     }
 
     .icon-button:hover::after {
@@ -340,6 +341,7 @@
       backdrop-filter: blur(10px);
       bottom: 20px;
       width: calc(100vw - 80px);
+      max-width: 680px;
       background-color: var(--background-footer);
       box-shadow: 0 0px 20px rgba(0, 0, 0, 0.548);
       border-radius: 23px;
@@ -361,6 +363,8 @@
       justify-content: space-between;
       align-items: flex-end;
       border-bottom: dashed 2px var(--gray);
+      padding-bottom: 10px;
+      margin-bottom: 10px;
     }
 
     .summary-label {
@@ -738,21 +742,27 @@
     </div>
 
     <div class="card">
-      <div class="input-group">
-        <label for="searchPoints">Quantos postos você pesquisou?</label>
+      <div class="input-group" id="num-stations-input-group">
+        <label for="num-stations">Quantos postos você pesquisou?</label>
         <div class="input-field">
-          <input type="number" id="searchPoints" placeholder="0" min="0" />
+          <input type="number" id="num-stations" placeholder="0" min="1" max="20" />
         </div>
       </div>
-      <button class="button" id="register-button">REGISTRAR</button>
+      <button class="button" id="start-registration-button">INICIAR REGISTRO</button>
+
+      <div id="sequential-price-input-section" style="display: none;">
+        <div class="input-group">
+          <label id="current-station-price-label">VALOR DO COMBUSTÍVEL PESQUISADO (POSTO 1)</label>
+          <div class="input-field">
+            <input type="number" id="fuel-price-input" placeholder="0.00" max="1000" min="0">
+            <span>(R$)</span>
+          </div>
+        </div>
+        <button class="button" id="confirm-sequential-button">CONFIRMAR PREÇO</button>
+      </div>
     </div>
 
     <div class="fuel-stations-grid" id="fuelStations">
-      <div class="fuel-station-card">
-        <span class="material-icons">location_on</span>
-        <span>POSTO 1</span>
-        <span class="price">R$ 10</span>
-      </div>
     </div>
   </div>
   <div class="summary-section">
@@ -778,8 +788,12 @@
     const distanceInput = document.getElementById("distance");
     const consumptionInput = document.getElementById("consumption");
     const requiredFuelSpan = document.getElementById("required-fuel");
-    const searchPointsInput = document.getElementById("searchPoints");
-    const registerButton = document.getElementById("register-button");
+    const numStationsInput = document.getElementById("num-stations");
+    const startRegistrationButton = document.getElementById("start-registration-button");
+    const sequentialPriceInputSection = document.getElementById("sequential-price-input-section");
+    const currentStationPriceLabel = document.getElementById("current-station-price-label");
+    const fuelPriceInput = document.getElementById("fuel-price-input");
+    const confirmSequentialButton = document.getElementById("confirm-sequential-button");
     const lowestPriceSpan = document.getElementById("lowest-price");
     const mediumPrice = document.getElementById("medium-price");
     const dailyCostSpan = document.getElementById("daily-cost");
@@ -788,24 +802,17 @@
     const loadingScreen = document.getElementById("loadingScreen");
     const readText = document.getElementById("readText");
     const body = document.querySelector("body");
+    const fuelStationGrid = document.getElementById("fuelStations");
+
     let isSpeechEnabled = false;
     let registeredPrices = [];
     let currentFuelConsumption = 0;
+    let numStationsToRegister = 0;
+    let currentStationIndex = 0;
 
-    distanceInput.value =
-      localStorage.getItem("distance") != null || localStorage.getItem("distance") != "0"
-        ? localStorage.getItem("distance")
-        : null;
-
-    consumptionInput.value =
-      localStorage.getItem("consume") != null || localStorage.getItem("consume") != "0"
-        ? localStorage.getItem("consume")
-        : null;
-
-    registeredPrices =
-      localStorage.getItem("prices") != null
-        ? localStorage.getItem("prices").split(",")
-        : [];
+    distanceInput.value = localStorage.getItem("distance") || "";
+    consumptionInput.value = localStorage.getItem("consume") || "";
+    registeredPrices = localStorage.getItem("prices") ? localStorage.getItem("prices").split(",").map(Number) : [];
 
     if (localStorage.getItem("theme") == "light") {
       body.classList.add("light");
@@ -868,13 +875,7 @@
     });
 
     removeSave.addEventListener("click", () => {
-      localStorage.removeItem("dailyCost");
-      localStorage.removeItem("distance");
-      localStorage.removeItem("lowest");
-      localStorage.removeItem("medium");
-      localStorage.removeItem("consume");
-      localStorage.removeItem("prices");
-      localStorage.removeItem("required");
+      localStorage.clear();
       window.location.reload();
     });
 
@@ -898,11 +899,9 @@
       const consume = parseFloat(consumptionInput.value);
 
       if (distance > 0 && consume > 0) {
-        console.log(distance);
-        console.log(consume);
         currentFuelConsumption = (distance * 2) / consume;
         isNaN(currentFuelConsumption) ? currentFuelConsumption = 0 : null
-        requiredFuelSpan.textContent = `${currentFuelConsumption}L`;
+        requiredFuelSpan.textContent = `${currentFuelConsumption.toFixed(2)}L`;
         localStorage.setItem("required", currentFuelConsumption.toFixed(2));
         localStorage.setItem("distance", distance.toFixed(2));
         localStorage.setItem("consume", consume.toFixed(2));
@@ -910,19 +909,19 @@
         currentFuelConsumption = 0;
         requiredFuelSpan.textContent = "0L";
         if (distance < 0 || isNaN(distance)) {
-          distanceInput.value = isNaN(localStorage.getItem("distance")) && 0
-          distanceInput.parentElement.style.border = "solid 2px #f00"
-          distanceInput.parentElement.style.transition = "1s linear"
+          distanceInput.value = isNaN(localStorage.getItem("distance")) ? 0 : localStorage.getItem("distance");
+          distanceInput.parentElement.style.border = "solid 2px #f00";
+          distanceInput.parentElement.style.transition = "1s linear";
           setTimeout(() => {
-            distanceInput.parentElement.style.border = "solid 2px transparent"
+            distanceInput.parentElement.style.border = "solid 2px transparent";
           }, 1000);
         }
         if (consume < 0 || isNaN(consume)) {
-          consumptionInput.value = isNaN(localStorage.getItem("consume")) && 0
-          consumptionInput.parentElement.style.border = "solid 2px #f00"
-          consumptionInput.parentElement.style.transition = "1s linear"
+          consumptionInput.value = isNaN(localStorage.getItem("consume")) ? 0 : localStorage.getItem("consume");
+          consumptionInput.parentElement.style.border = "solid 2px #f00";
+          consumptionInput.parentElement.style.transition = "1s linear";
           setTimeout(() => {
-            consumptionInput.parentElement.style.border = "solid 2px transparent"
+            consumptionInput.parentElement.style.border = "solid 2px transparent";
           }, 1000);
         }
       }
@@ -930,21 +929,21 @@
     }
 
     function updateFuelStationsDisplay() {
-      const fuelStationGrid = document.getElementById("fuelStations");
       fuelStationGrid.innerHTML = "";
       registeredPrices.forEach((price, index) => {
         let button = document.createElement("button");
         button.className = "deletePoint";
         button.type = "button";
-        button.innerHTML =
-          '<ion-icon name="close-circle-outline"></ion-icon>';
-        button.addEventListener("click", () => {
-          registeredPrices.splice(index, 1);
-          localStorage.setItem("prices", registeredPrices);
-          updateFuelStationsDisplay();
-          updateLowestPrice();
-          updateMediumPrice();
-        });
+        button.innerHTML = '<ion-icon name="close-circle-outline"></ion-icon>';
+        button.addEventListener("click", (function(idx) {
+          return function() {
+            registeredPrices.splice(idx, 1);
+            localStorage.setItem("prices", registeredPrices.join(','));
+            updateFuelStationsDisplay();
+            updateLowestPrice();
+            updateMediumPrice();
+          };
+        })(index));
         setTimeout(() => {
           const stationCard = document.createElement("div");
           stationCard.className = "fuel-station-card";
@@ -959,7 +958,7 @@
           inputPrice.onchange = () => {
             if (inputPrice.value > 0) {
               registeredPrices[index] = inputPrice.value
-              localStorage.setItem("prices", registeredPrices);
+              localStorage.setItem("prices", registeredPrices.join(','));
               updateFuelStationsDisplay();
               updateLowestPrice();
               updateMediumPrice();
@@ -985,11 +984,8 @@
 
     function updateMediumPrice() {
       if (registeredPrices.length > 0) {
-        let medium = 0;
-        registeredPrices.forEach((cost) => {
-          medium = medium + Number(cost);
-        });
-        medium = medium / registeredPrices.length;
+        let sum = registeredPrices.reduce((acc, curr) => acc + Number(curr), 0);
+        let medium = sum / registeredPrices.length;
         mediumPrice.textContent = `R$ ${medium.toFixed(2)}`;
         localStorage.setItem("medium", medium.toFixed(2));
       } else {
@@ -1009,35 +1005,87 @@
     distanceInput.addEventListener("change", calculateRequiredFuel);
     consumptionInput.addEventListener("change", calculateRequiredFuel);
 
-    registerButton.addEventListener("click", () => {
-      const points = parseFloat(searchPointsInput.value);
-      if (!isNaN(points) && points > 0) {
-        registeredPrices = []
-        for (let index = 0; index < points; index++) {
-          registeredPrices.push(0);
+    startRegistrationButton.addEventListener("click", () => {
+      const points = parseInt(numStationsInput.value);
+      if (!isNaN(points) && points > 0 && points <= 20) {
+        numStationsToRegister = points;
+        currentStationIndex = 0;
+        registeredPrices = [];
+        localStorage.setItem("prices", registeredPrices.join(','));
+        numStationsInput.value = "";
+        updateFuelStationsDisplay();
+        showSequentialPriceInput();
+      } else if (numStationsInput.value === "") {
+        numStationsToRegister = 0;
+        currentStationIndex = 0;
+        registeredPrices = [];
+        localStorage.setItem("prices", registeredPrices.join(','));
+        updateFuelStationsDisplay();
+        hideSequentialPriceInput();
+      } else {
+        createMessage(
+          "Por favor, insira um número válido de postos (entre 1 e 20)."
+        );
+        hideSequentialPriceInput();
+      }
+      updateLowestPrice();
+      updateMediumPrice();
+    });
+
+    confirmSequentialButton.addEventListener("click", () => {
+      const price = parseFloat(fuelPriceInput.value);
+
+      if (!isNaN(price) && price > 0) {
+        registeredPrices.push(price);
+        localStorage.setItem("prices", registeredPrices.join(','));
+
+        currentStationIndex++;
+        fuelPriceInput.value = "";
+
+        if (currentStationIndex < numStationsToRegister) {
+          currentStationPriceLabel.textContent = `VALOR DO COMBUSTÍVEL PESQUISADO (POSTO ${currentStationIndex + 1})`;
+        } else {
+          hideSequentialPriceInput();
+          createMessage("Todos os preços dos postos foram registrados!");
         }
-        localStorage.setItem("prices", registeredPrices);
-        searchPointsInput.value = "";
         updateFuelStationsDisplay();
         updateLowestPrice();
         updateMediumPrice();
       } else {
-        createMessage(
-          "Por favor, insira um valor válido para o combustível."
-        );
+        createMessage("Por favor, insira um valor válido para o combustível.");
       }
     });
+
+    function showSequentialPriceInput() {
+      sequentialPriceInputSection.style.display = "block";
+      currentStationPriceLabel.textContent = `VALOR DO COMBUSTÍVEL PESQUISADO (POSTO ${currentStationIndex + 1})`;
+      fuelPriceInput.focus();
+    }
+
+    function hideSequentialPriceInput() {
+      sequentialPriceInputSection.style.display = "none";
+    }
 
     window.addEventListener("load", () => {
       setTimeout(() => {
         loadingScreen.style.display = "none";
       }, 1000);
-    });
 
-    updateFuelStationsDisplay();
-    updateLowestPrice();
-    updateMediumPrice();
-    calculateRequiredFuel();    
+      calculateRequiredFuel();
+      updateFuelStationsDisplay();
+      updateLowestPrice();
+      updateMediumPrice();
+
+      if (registeredPrices.length > 0) {
+        hideSequentialPriceInput();
+      } else {
+        const initialNumStations = parseInt(numStationsInput.value);
+        if (!isNaN(initialNumStations) && initialNumStations > 0) {
+          numStationsToRegister = initialNumStations;
+          showSequentialPriceInput();
+        }
+      }
+    });
   </script>
 </body>
 
